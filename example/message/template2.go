@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/donghongshuai/gocircum/wechat"
+	"github.com/hansedong/wechat"
 )
 
 var mediaHandler *wechat.Media

@@ -7,7 +7,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/donghongshuai/gocircum/wechat"
+	"github.com/hansedong/wechat"
 )
 
 func main() {

@@ -1,12 +1,12 @@
 //素材处理——图片
-//【处理图片消息的例子，本例子为，拿到用户发送的图片，服务端将用户发送的图片，保存到本地】
+//【处理图片消息的例子，本例子为，拿到用户发送的图片，服务端将用户发送的图片，保存到本地，并上传到七牛、腾讯云的对象存储】
 //1、你需要在配置好公众号后台
 //2、执行 go run image_to_image.go 开启server
 
 package main
 
 import (
-	"github.com/donghongshuai/gocircum/wechat"
+	"github.com/hansedong/wechat"
 )
 
 var mediaHandler *wechat.Media
