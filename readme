@@ -1,3 +1,0 @@
-1、消息回复媒体资源
-媒体资源是需要媒体资源id（MediaId）的。而只有通过【微信认证的服务号】才能得到。
-①：回复音乐的ThumbMediaId，就是媒体资源id，如果我们没有这个id，可以在输出XML的时候，选择res := ctx.GetMsgMusicNoMediaResponse()
