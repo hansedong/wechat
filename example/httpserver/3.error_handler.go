@@ -3,6 +3,8 @@
 //为了方便看效果，假如你配置的回调地址为：http://xxx.com/callback/wxxxjjs329323，那么直接在浏览器访问就可以在控制台看到错误信息了（因为无参数，签名验证失败）
 //1、你需要在配置好公众号后台
 //2、执行 go run 3.error_handler.go 开启server
+//3、设置你的公众号的接口URL为：域名/callback/你程序设置的AppNo
+
 package main
 
 import (

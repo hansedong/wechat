@@ -1,6 +1,7 @@
 //【处理文本消息的例子，本例子为，返回给用户一张图片】
 //1、你需要在配置好公众号后台
 //2、执行 go run text_to_image.go 开启server
+//3、设置你的公众号的接口URL为：域名/callback/你程序设置的AppNo
 
 package main
 

@@ -1,6 +1,7 @@
 //应用管理器说明
 //1、你需要在配置好公众号后台
 //2、执行 go run app_manager.go 开启server
+//3、设置你的公众号的接口URL为：域名/callback/你程序设置的AppNo
 
 package main
 

@@ -1,6 +1,7 @@
 //例子：以Go语言内置的Net/Http的方式启动Http Server，同时处理3个（可以处理任意个）不同的公众号的请求。当用户发送任意文字的时候，公众号返回一个文章
 //1、你需要在配置好公众号后台
 //2、执行 go run 2.nethttp_server.go 开启server
+//3、设置你的公众号的接口URL为：域名/callback/你程序设置的AppNo
 
 package main
 
