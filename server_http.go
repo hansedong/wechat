@@ -254,5 +254,5 @@ func (httpServer *NetHttpServer) Listen(address string) {
 //开始监听HTTPS服务
 func (httpServer *NetHttpServer) ListenTLS(address, cerFile, keyFile string) {
 	router := httpServer.Router
-	httpServer.ListenAndServeTLS(address, cer, key, router)
+	http.ListenAndServeTLS(address, cerFile, keyFile, router)
 }
