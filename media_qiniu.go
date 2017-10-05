@@ -5,8 +5,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/qiniu/api.v7/kodo"
-	"github.com/qiniu/api.v7/kodocli"
+	"github.com/qiniu/api.v7/auth/qbox"
+	"github.com/qiniu/api.v7/storage"
+	"golang.org/x/net/context"
 )
 
 //构造返回值字段
@@ -50,25 +51,26 @@ func (qi *QiniuH) Save(fileSrc string) bool {
 
 func (qi *QiniuH) Upload(fileSrc string) error {
 	uploadFileName := getUploadFileName(fileSrc)
-	//初始化AK，SK
-	conf := &kodo.Config{AccessKey: qi.AccessKey, SecretKey: qi.SecretKey}
-	//创建一个Client
-	c := kodo.New(0, conf)
-	//设置上传的策略
-	policy := &kodo.PutPolicy{
-		Scope: qi.Bucket,
-		//设置Token过期时间
-		Expires: 3600,
-		SaveKey: uploadFileName,
+
+	localFile := fileSrc
+	bucket := qi.Bucket
+	key := uploadFileName
+	putPolicy := storage.PutPolicy{
+		Scope: bucket,
 	}
-	//生成一个上传token
-	token := c.MakeUptoken(policy)
-	//构建一个uploader
-	zone := 0
-	uploader := kodocli.NewUploader(zone, nil)
-	var ret PutRet
-	//调用PutFileWithoutKey方式上传，没有设置saveasKey以文件的hash命名
-	err := uploader.PutFileWithoutKey(nil, &ret, token, fileSrc, nil)
+	mac := qbox.NewMac(accessKey, secretKey)
+	upToken := putPolicy.UploadToken(mac)
+	cfg := storage.Config{}
+	// 空间对应的机房
+	cfg.Zone = &storage.ZoneHuadong
+	// 是否使用https域名
+	cfg.UseHTTPS = false
+	// 上传是否使用CDN上传加速
+	cfg.UseCdnDomains = false
+	// 构建表单上传的对象
+	formUploader := storage.NewFormUploader(&cfg)
+	ret := storage.PutRet{}
+	err := formUploader.PutFile(context.Background(), &ret, upToken, key, localFile, nil)
 	//重新发起上传尝试
 	if err != nil {
 		Logger.Printf("七牛云存储：%v: %v", uploadFileName, "上传失败（发起重试），失败信息："+err.Error())
