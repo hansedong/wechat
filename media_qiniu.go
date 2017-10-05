@@ -58,7 +58,7 @@ func (qi *QiniuH) Upload(fileSrc string) error {
 	putPolicy := storage.PutPolicy{
 		Scope: bucket,
 	}
-	mac := qbox.NewMac(accessKey, secretKey)
+	mac := qbox.NewMac(qi.AccessKey, qi.SecretKey)
 	upToken := putPolicy.UploadToken(mac)
 	cfg := storage.Config{}
 	// 空间对应的机房
@@ -74,7 +74,7 @@ func (qi *QiniuH) Upload(fileSrc string) error {
 	//重新发起上传尝试
 	if err != nil {
 		Logger.Printf("七牛云存储：%v: %v", uploadFileName, "上传失败（发起重试），失败信息："+err.Error())
-		err = uploader.PutFileWithoutKey(nil, &ret, token, fileSrc, nil)
+		err = formUploader.PutFile(context.Background(), &ret, upToken, key, localFile, nil)
 		return err
 	}
 	if err == nil {

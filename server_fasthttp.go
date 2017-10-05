@@ -76,13 +76,13 @@ func (httpServer *FastHttpServer) checkMsgSignature(app *WechatApp, ctx *fasthtt
 
 //校验微信公众号回调请求，成功返回：校验结果、消息类型、此次消息对应的微信公众号应用、xml解析后的上下文
 //msgCheck：是否进行消息类型检测
-func (httpServer *FastHttpServer) checkCallbackFuncParams(ctx *fasthttp.RequestCtx, params fasthttprouter.Params, msgCheck bool) (bool, string, *WechatApp, *WechatContext) {
+func (httpServer *FastHttpServer) checkCallbackFuncParams(ctx *fasthttp.RequestCtx, msgCheck bool) (bool, string, *WechatApp, *WechatContext) {
 	var app *WechatApp
 	var xmlParser *WechatContext
 	var msgType, xmlStr string
 	var err error
 	var valiad, appexists bool
-	appNo := params.ByName("appNo")
+	appNo := ctx.UserValue("appNo").(string)
 	if appNo == "" {
 		err = errors.New("未找到能处理此次请求的公众号应用，应用编号：" + appNo)
 		goto CHECK_END
@@ -140,9 +140,9 @@ CHECK_END:
 }
 
 //处理微信公众号的回调消息
-func (httpServer *FastHttpServer) callbackFunc(ctx *fasthttp.RequestCtx, params fasthttprouter.Params) {
+func (httpServer *FastHttpServer) callbackFunc(ctx *fasthttp.RequestCtx) {
 	//微信消息参数校验
-	valiad, msgType, app, xmlParser := httpServer.checkCallbackFuncParams(ctx, params, true)
+	valiad, msgType, app, xmlParser := httpServer.checkCallbackFuncParams(ctx, true)
 	if !valiad {
 		return
 	}
@@ -218,8 +218,8 @@ func (httpServer *FastHttpServer) callbackFunc(ctx *fasthttp.RequestCtx, params 
 }
 
 //处理微信公众号的认证消息（此函数一般只调用一次，当用户设置微信公众号服务器配置，并启用的时候，会发生此次调用）
-func (httpServer *FastHttpServer) authFunc(ctx *fasthttp.RequestCtx, params fasthttprouter.Params) {
-	valiad, _, app, _ := httpServer.checkCallbackFuncParams(ctx, params, false)
+func (httpServer *FastHttpServer) authFunc(ctx *fasthttp.RequestCtx) {
+	valiad, _, app, _ := httpServer.checkCallbackFuncParams(ctx, false)
 	if valiad {
 		ret := httpServer.getAuthEchostr(app.Configure.Token, ctx)
 		//header
